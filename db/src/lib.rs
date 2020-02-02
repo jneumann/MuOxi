@@ -1,5 +1,3 @@
-#![deny(missing_docs)]
-
 //!
 //! Diesel powered ORM management library for MuOxi
 //! uses postgres
@@ -8,10 +6,11 @@
 #[macro_use]
 extern crate diesel;
 
+// pub mod accounts;
 pub mod cache;
 pub mod cache_structures;
-pub mod clients;
 pub mod schema;
+pub mod structures;
 pub mod utils;
 
 use diesel::pg::PgConnection;
@@ -21,9 +20,11 @@ use diesel::prelude::*;
 pub struct DatabaseHandler {
     /// acutal connection to postgres database
     pub handle: PgConnection,
+    /// handle to the Accounts table
+    pub accounts: structures::account::AccountHandler,
 
-    /// handle to the clients table
-    pub clients: clients::ClientHandler,
+    /// handle to the Characters table
+    pub characters: structures::character::CharacterHandler,
 }
 
 impl DatabaseHandler {
@@ -37,15 +38,9 @@ impl DatabaseHandler {
         let conn = PgConnection::establish(&url).expect("Couldn't create handle to database");
         Self {
             handle: conn,
-            clients: clients::ClientHandler {},
+            // clients: clients::ClientHandler {},
+            accounts: structures::account::AccountHandler,
+            characters: structures::character::CharacterHandler,
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
     }
 }
