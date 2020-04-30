@@ -60,7 +60,13 @@ pub trait Command: Debug + Sync {
 
     /// tests to see if supplied string is a valid command
     fn is_match<'a>(&self, cmd: &'a str) -> bool {
-        let cmd = cmd.to_lowercase();
+        let raw_cmd = cmd.to_lowercase();
+        let command: Vec<&str> = raw_cmd.split(' ').collect();
+        let cmd: &str = command[0];
+        let mut  _arg: &str = "";
+        if command.len() > 1 {
+            _arg = command[1];
+        }
         // first check to see if there is a match with the name itself
         if cmd == self.name() {
             return true;
@@ -128,7 +134,15 @@ impl CmdSet {
     /// check to see if command exists within CmdSet
     /// and returns the dyn Command that it matches with
     /// this is still *fucking confusing*
-    pub fn get(&mut self, cmd_string: String) -> Option<&mut (dyn Command + Send)> {
+    pub fn get(&mut self, cmd_string: String) -> Option<(String, Option<&mut (dyn Command + Send)>)> {
+        let cmd = cmd_string.clone();
+        let command: Vec<&str> = cmd.split(' ').collect();
+        let mut args: &str = "";
+
+        if command.len() > 1 {
+            args = command[1];
+        }
+
         let mut cntr = 0;
         for cmd in self.cmds.iter_mut() {
             if cmd.is_match(&cmd_string) {
@@ -138,7 +152,7 @@ impl CmdSet {
         }
 
         if let Some(cmd) = self.cmds.get_mut(cntr) {
-            return Some(&mut **cmd);
+            return Some((args.to_string(), Some(&mut **cmd)));
         } else {
             return None;
         }

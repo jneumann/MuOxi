@@ -22,11 +22,8 @@ use db::utils::{json_to_object, read_json_file, UID};
 use db::DatabaseHandler;
 use hotwatch::{Event, Hotwatch};
 use lazy_static::lazy_static;
-use serde_json;
 use std::collections::HashMap;
 use std::env;
-use std::fs::File;
-use std::io::BufReader;
 use std::thread;
 use std::time::Duration;
 
@@ -100,7 +97,7 @@ pub fn trigger_upload(file: JsonFile) -> Result<(), Box<dyn std::error::Error>> 
             let chars = read_json_file(&*CHARACTERS).expect("Couldn't read from characters.json");
 
             let characters: HashMap<UID, Character> = json_to_object(chars).unwrap();
-            for (_uid, character) in characters {
+            for (_uid, _character) in characters {
                 // db.characters.upsert(&db.handle, &character)?;
             }
 

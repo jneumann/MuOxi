@@ -5,7 +5,7 @@
 // //!
 
 use crate::comms::Client;
-use crate::prelude::{CmdSet, Command, CommandResult};
+use crate::prelude::{Command, CommandResult};
 use crate::send;
 use async_trait::async_trait;
 use std::cmp::{Eq, PartialEq};

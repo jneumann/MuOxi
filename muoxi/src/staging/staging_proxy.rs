@@ -14,9 +14,8 @@ pub mod copyover;
 pub mod prelude;
 pub mod states;
 
-use comms::{Client, Comms, Server};
+use comms::{Client, Server};
 use db::utils::{gen_uid, UID};
-// use db::DatabaseHandler;
 use crate::prelude::{LinesCodecResult, GAME_ADDR, PROXY_ADDR};
 use crate::states::ConnStates;
 use db::cache_structures::socket::CacheSocket;
@@ -126,20 +125,20 @@ pub async fn process(
             client.state = new_state;
             let state = format!("({:?})", client.state);
             send(&mut client, &state).await?;
-        // match client.state {
-        //     ConnStates::AwaitingName => {
-        //         // in awaiting name stage, do the following
-        //         // 1) check if input is new
-        //         // 1a) if new -> create new account (change state)
-        //         // 2) if not, check if account exists
-        //         // 3) if not, return errmsg and start from beginning
-        //         // 4) if account exists, ask for password (change state)
-        //     }
-        //     _ => (),
-        // }
+            match client.state {
+                ConnStates::AwaitingName => {
+                    // in awaiting name stage, do the following
+                    // 1) check if input is new
+                    // 1a) if new -> create new account (change state)
+                    // 2) if not, check if account exists
+                    // 3) if not, return errmsg and start from beginning
+                    // 4) if account exists, ask for password (change state)
+                }
+                e => panic!(e),
+            }
 
-        // for testing use server to use id
-        // valid reponse
+            // for testing use server to use id
+            // valid reponse
         } else {
             // most likely disconnected, cleanup
             println!("Client dropped connection. Removing...");

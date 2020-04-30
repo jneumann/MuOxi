@@ -7,7 +7,6 @@ use crate::cmds::proxy_commands::*;
 use crate::cmdset;
 use crate::comms::Client;
 use crate::prelude::{CmdSet, Command, LinesCodecResult};
-use crate::send;
 use serde::{Deserialize, Serialize};
 use std::marker::Send;
 
@@ -43,7 +42,11 @@ impl ConnStates {
                 // leaving this explicit type for documentation
                 // When retrieving a cmd from response, it will return
                 // a `&mut (dyn Command + Send)`
-                let cmd: Option<&mut (dyn Command + Send)> = cmdset.get(response);
+                let command: Option<(String, Option<&mut (dyn Command + Send)>)> = cmdset.get(response);
+                let (arg, cmd) = match command {
+                    Some(c) => c,
+                    None => ("".to_string(), None)
+                };
                 let errmsg = format!("Error attempting to executing cmd: {:?}", cmd);
 
                 do_cmd(

@@ -6,8 +6,6 @@
 //!
 
 use crate::utils::UID;
-use diesel::expression_methods::TextExpressionMethods;
-use diesel::pg::upsert::excluded;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -233,7 +231,7 @@ pub mod account {
 pub mod character {
     use super::super::schema::characters;
     use super::*;
-    use crate::utils::{gen_uid, UID};
+    use crate::utils::UID;
 
     /// representation of the actual playable character
     #[derive(Queryable, Insertable, Debug, AsChangeset, Clone, Serialize, Deserialize)]
